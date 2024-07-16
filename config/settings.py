@@ -54,6 +54,7 @@ MIDDLEWARE = [
 ]
 
 #Allowing all origins for this project
+ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'config.urls'
