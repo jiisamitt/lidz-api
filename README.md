@@ -8,3 +8,5 @@ Correr los comandos:
 2.  python manage.py makemigrations
 3.  python manage.py migrate
 4.  python manage.py runserver
+
+Los archivos de interés son views.py (funciones), models.py (modelos), urls.py (rutas) y tal vez settings.py (configuración).
