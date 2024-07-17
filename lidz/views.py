@@ -101,12 +101,11 @@ def create_client(request):
     }, status=status.HTTP_201_CREATED)
 
 # View to get the chance of that client to actually buy a house, considering his salary, savings, interest (messages) and debts
-
 @api_view(['GET'])
 def get_score(request, client_id):
     client = get_object_or_404(Client, id=client_id)
     # Value of the house (UF at 37597)
-    house_value = 3000*37597
+    HOUSE_VALUE = 3000*37597
     
     # We get the client's information
     salary = client.salary
@@ -132,9 +131,10 @@ def get_score(request, client_id):
     
     # Now we calculate the savings score, which is between 0 and 20. If the savings are less than 3% of the house value, the score is 0
     savings_score = 0
-    savings_percentage = savings/house_value
+    savings_percentage = savings/HOUSE_VALUE
+    SAVINGS_NORMALIZATION =  10
     if savings_percentage >= 0.03:
-        savings_score = min(savings_percentage*20*10, 20)
+        savings_score = min(savings_percentage*20*SAVINGS_NORMALIZATION, 20)
     
     # Now we calculate the debts score, which is between 20 and -20. If all the debts are from this month, they don't affect the score; if they are from last month to 2 years ago, they affect the score negatively
     debts_score = 0
@@ -151,9 +151,10 @@ def get_score(request, client_id):
     
     # Now we calculate the salary score, which is between 0 and 20. If the salary is less than 0.5% of the house value, the score is 0
     salary_score = 0
-    salary_percentage = salary/house_value
+    salary_percentage = salary/HOUSE_VALUE
+    SALARY_NORMALIZATION =  100
     if salary_percentage >= 0.005:
-        salary_score = min(salary_percentage*20*100, 20)
+        salary_score = min(salary_percentage*20*SALARY_NORMALIZATION, 20)
         
     # Now we calculate bonuses for the client (this will be for atypical/border cases)
     bonus_score = 0
@@ -167,15 +168,17 @@ def get_score(request, client_id):
     # Now we calculate the final score
     score = interest_score + savings_score + debts_score + salary_score + bonus_score
     
-    # Now if the score is less than 0, we return 0; if it's more than 100, we return 100    
+    # Now if the score is less than 0, we return 0; if it's more than 100, we return 100
+    score = max(0, score)
+    score = min(100, score) 
     
     return Response({
         'score': score,
-        'interest_score': interest_score,
-        'savings_score': savings_score,
-        'debts_score': debts_score,
-        'salary_score': salary_score,
-        'bonus_score': bonus_score
+        #'interest_score': interest_score,
+        #'savings_score': savings_score,
+        #'debts_score': debts_score,
+        #'salary_score': salary_score,
+        #'bonus_score': bonus_score
     })
     
     
