@@ -1,6 +1,6 @@
 # lidz-api
 
-Se necesita tener python y django instalado para correr el proyecto. Recomiendo usar un virtual environment para sobretodo al correr pip install -r requirements.txt
+Se necesita tener python y django instalado para correr el proyecto. Recomiendo usar un virtual environment sobretodo al correr pip install -r requirements.txt
 
 Correr los comandos:
 
